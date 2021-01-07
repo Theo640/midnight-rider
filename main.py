@@ -27,6 +27,7 @@ REACH THE END BEFORE THE MAN GON GETCHU
 
 CHOICES = """
     ----
+    A. Eat a piece of tofu.
     B. Drive at a moderate speed.
     C. Speed ahead at full throttle.
     D. Stop to refuel. (NO FOOD AVALIABLE)
@@ -35,9 +36,38 @@ CHOICES = """
     ----
     """
 
+WIN = """
+YOU PRERSSEC THE BUTTON TO OPEN THE GATE.
+THIS ISN'T THE FIST TIME YOU'VE DONE THIS.
+YOU CAN TIME IT PERFECTLY SO THAT YOU.
+SLIDE THE CAR IN AS THE GATES CLOSE.
 
-def intro():
-    for char in textwrap.dedent(INTRODUCTION):
+YOU KNOW YOU DID THE RIGHT THING.
+THE GOVERNMENT WOULD HAVE TORN THE CAR APART,
+ANALYSING IT, TESTING IT, THEN DESTROYING IT.
+
+THEY DON'T KNOW ITS SECRETS...
+THAT IT HOLDS THE KEY TO DIFFERENT WORLDS.
+
+AS YOU STEP OUT OF THE VEHICLE, FIDO RUNS
+UP TO YOU
+"THANK YOU FOR SAVING ME," HE SAYS.
+
+AS YOU TAKE A COUPLE OF STEPS AWAY FROM THE CAR,
+IT MAKES A STRANGE NOISE.
+
+BEFORE YOUR EYES, IT SHIFTS ITS SHAPE.
+YOU'VE SEEN IT BEFORE, BUT ONLY ON TV.
+
+"BUMBLEBEE...?"
+
+
+----GAME OVER---- 
+"""
+
+
+def type_text_output(string):
+    for char in textwrap.dedent(string):
         time.sleep(0.05)
         sys.stdout.write(char)
         sys.stdout.flush()
@@ -46,10 +76,13 @@ def intro():
 
 
 def main():
-    # intro()
+    #type_text_output(INTRODUCTION)
 
     # CONSTANTS
     MAX_FUEL_LEVEL = 50
+    MAX_DISTANCE_TRAVELLED = 100
+    MAX_TOFU = 3
+    hunger = 0
 
     # Variables
     done = False
@@ -63,15 +96,47 @@ def main():
 
     # MAIN LOOP
     while not done:
-        # TODO: Check if reached END GAME
+
+
+        # Random events
+        # FIDO - refills your food (5%)
+        if tofu < 3 and random.random() < 0.05:
+            # refill tofu
+        tofu = MAX_TOFU
+            # player feedback
+            print("******** You lookd at your tofu container.")
+            print("******** It is filled magically.")
+            print("******** \"You're welcome!'\, says a small voice.")
+            print("******** The dog used its magic tofu cooking skills.")
+
+
+        # Check if reached END GAME
+        # WIN - Traveled the Distance Required
+        if kms_travelled > MAX_DISTANCE_TRAVELLED:
+            time.sleep(2)
+            type_text_output(WIN)
+            break
 
         # Present the user their choices
         print(CHOICES)
 
         user_choice = input("What do you want to do?").lower().strip("!,.?")
 
-        if user_choice == "b":
-            pass
+        if user_choice == "a":
+            # EAT/HUNGER
+            if tofu > 0:
+                tofu -= 1
+                hunger = 0
+                print()
+                print("-------- Mmmmm. Soybean goodness.")
+                print("-------- Your hunger is sated.")
+                print()
+            else:
+                print()
+                print("-------- You have none left.")
+                print()
+
+        elif user_choice == "b":
             # Moderate speed
             players_distance_now = random.randrange(7, 15)
             agents_distance_now = random.randrange(7, 15)
@@ -129,15 +194,17 @@ def main():
             print(f"\tFuel remaining: {fuel} L")
             print(f"\tAgents are {abs(agents_distance)} kms behind.")
             print(f"\tYou have {tofu} tofu left.")
-            print(f"\---------\n")
+            print(f"\t---------\n")
         elif user_choice == "q":
             done = True
 
+
+        # HUNGER
+        if user_choice not in ["a", "e"]:
+            hunger += random.randrange(5, 13)
+
         time.sleep(1.5)
 
-        # TODO: Change the environment based on
-        #       user choice, and RNG
-        # TODO: Random event generator
 
     # Outro
     print("Thanks for playing. Play again soon!")
