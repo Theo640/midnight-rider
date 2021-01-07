@@ -27,8 +27,9 @@ REACH THE END BEFORE THE MAN GON GETCHU
 
 CHOICES = """
     ----
+    B. Drive at a moderate speed.
     C. Speed ahead at full throttle.
-    D. Stop to refuel (NO FOOD AVALIABLE)
+    D. Stop to refuel. (NO FOOD AVALIABLE)
     E. Status Check
     Q. OUIT
     ----
@@ -69,8 +70,27 @@ def main():
 
         user_choice = input("What do you want to do?").lower().strip("!,.?")
 
-        if user_choice == "c":
+        if user_choice == "b":
             pass
+            # Moderate speed
+            players_distance_now = random.randrange(7, 15)
+            agents_distance_now = random.randrange(7, 15)
+
+            # Burn fuel\
+            fuel -= random.randrange(2, 7)
+
+            # Player distance traveled
+            kms_travelled += players_distance_now
+
+            # Agents distance traveled
+            agents_distance -= players_distance_now - agents_distance_now
+
+            # Feedback to player
+            print()
+            print(f" You traveled {players_distance_now} kms")
+            print()
+
+        elif user_choice == "c":
             # FAST
             players_distance_now = random.randrange(10, 16)
             agents_distance_now = random.randrange(7, 15)
@@ -86,7 +106,7 @@ def main():
 
             # Feedback to Player
             print()
-            print("ZOOOOOOOM.")
+            print("--------- ZOOOOOOOM.")
             print(f"-------- You traveled {players_distance_now} kms")
             print()
         elif user_choice == "d":
