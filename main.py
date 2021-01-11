@@ -18,26 +18,15 @@ THE CAR IS SPECIAL.
 THAT'S WHY THE GOVERNMENT WANTS IT.
 
 WE CAN'T LET THEM HAVE IT.
+
 ONE GOAL: SURVIVAL... and THE CAR
 REACH THE END BEFORE THE MAN GON GETCHU
 
 ------
 """
 
-
-CHOICES = """
-    ----
-    A. Eat a piece of tofu.
-    B. Drive at a moderate speed.
-    C. Speed ahead at full throttle.
-    D. Stop to refuel. (NO FOOD AVALIABLE)
-    E. Status Check
-    Q. OUIT
-    ----
-    """
-
 WIN = """
-YOU PRERSSEC THE BUTTON TO OPEN THE GATE.
+YOU PRESSED THE BUTTON TO OPEN THE GATE.
 THIS ISN'T THE FIST TIME YOU'VE DONE THIS.
 YOU CAN TIME IT PERFECTLY SO THAT YOU.
 SLIDE THE CAR IN AS THE GATES CLOSE.
@@ -62,8 +51,93 @@ YOU'VE SEEN IT BEFORE, BUT ONLY ON TV.
 "BUMBLEBEE...?"
 
 
+
 ----GAME OVER---- 
 """
+
+LOSE_HUNGER = """
+
+YOUR STOMACH IS EMPTY.
+WHO KNEW THAT THE DOCTOR SAID WAS TRUE,
+THAT HUMAN/ROBOT HYBRIDS WOULD NEED
+TOFU TO SUSTAIN THEMSELVES.
+
+YOUR ROBOT SYSTEMS START TO SHUT DOWN.
+YOUR HUMAN EYES CLOSE.
+
+THE LAST THING THAT YOU HEAR ARE SIRENS.
+THEY GOTCHU. THEY GOT THE CAR.
+WE FAILED...
+
+
+
+----GAME OVER----
+"""
+
+LOSE_AGENTS = """
+
+THE AGENTS HAVE CLOSED IN ON YOU.
+THERE ARE AT LEAST 20 CARS SURROUNDING YOU.
+THE LEAD CAR BUMPS YOUR PASSENGER SIDE;
+YOU MANAGE TO CORRECT YOUR STEERING
+TO KEEP YOU FROM CRASHING.
+
+YOU DIDN'T SEE THE AGENT'S CAR BESIDE YOU.
+THE DRIVER BUMPS YOUR CAR.
+AND THAT'S IT.
+
+YOU SPIN UNCONTROLLABLY.
+THE CAR FLIPS OVER AT LEAST TWO TIMES.
+OR MORE... YOU SEEM TOI HAVE LOST COUNT.
+
+SIRENS.
+
+"ARE THEY ALIVE?" THEY SAY AS YOU HEAR 
+FOOTSTEPS GETTING CLOSER.
+"DOESN'T MATTER, ALL WE WANTED WAS THE CAR.
+
+YOU SEE A DOG SLOWLY STEP OUT OF THE 
+OVERTURNED CAR.
+
+"YOU WILL NEVER STOP THE REVOLUTION,"
+THE DOG SEEMS TO SAY TO THE OFFICERS.
+
+IT WAS IN THE CARE THE WHOLE TIME.
+
+YOU DRIFT OFF INTO THE UNCONSCIOUSNESS.
+
+
+----GAME OVER----
+"""
+
+LOSE_FUEL = """
+
+YOUR CAR SPUTTERS AND SEEMS TO LET OYT 
+A BIG SIGH. THERE'S NO MORE FUEL LEFT.
+
+THE COPS SURROUND YOU AND THEY STEP 
+OUT OF THEiR CARS. THE LEAD AGENTS 
+RIOS THE DOOR OPEN AND THROWS YOU OUT
+OF THE CAR.
+
+"WE FINALLY GOT IT."
+
+YOU FAILED.
+
+
+----GAME OVER----
+"""
+
+CHOICES = """
+    ----
+    A. Eat a piece of tofu.
+    B. Drive at a moderate speed.
+    C. Speed ahead at full throttle.
+    D. Stop to refuel. (NO FOOD AVAILABLE)
+    E. Status Check
+    Q. QUIT
+    ----
+    """
 
 
 def type_text_output(string):
@@ -82,33 +156,31 @@ def main():
     MAX_FUEL_LEVEL = 50
     MAX_DISTANCE_TRAVELLED = 100
     MAX_TOFU = 3
-    hunger = 0
+    MAX_HUNGER = 50
+    STARTING_AGENTS_DISTANCE = -20
 
     # Variables
     done = False
 
     kms_travelled = 0        # 100km is the end
-    agents_distance = -20   # 0 is the end
+    agents_distance = STARTING_AGENTS_DISTANCE   # 0 is the end
     turns = 0
-    tofu = 3                # 3 is max
+    tofu = MAX_TOFU                # 3 is max
     fuel = MAX_FUEL_LEVEL   # max is 50 L
     hunger = 0
 
     # MAIN LOOP
     while not done:
-
-
         # Random events
         # FIDO - refills your food (5%)
         if tofu < 3 and random.random() < 0.05:
             # refill tofu
-        tofu = MAX_TOFU
+            tofu = MAX_TOFU
             # player feedback
-            print("******** You lookd at your tofu container.")
+            print("******** You looked at your tofu container.")
             print("******** It is filled magically.")
-            print("******** \"You're welcome!'\, says a small voice.")
+            print("******** \"You're welcome!'\", says a small voice.")
             print("******** The dog used its magic tofu cooking skills.")
-
 
         # Check if reached END GAME
         # WIN - Traveled the Distance Required
@@ -116,6 +188,29 @@ def main():
             time.sleep(2)
             type_text_output(WIN)
             break
+        # LOSE - by hunger > MAX_HUNGER (50)
+        elif hunger > MAX_HUNGER:
+            time.sleep(2)
+            type_text_output(LOSE_HUNGER)
+            break
+        # LOSE - agents reached you
+        elif agents_distance >= 0:
+            time.sleep(2)
+            type_text_output(LOSE_AGENTS)
+            break
+        # LOSE - fuel runs out
+        elif fuel <= 0:
+            time.sleep(2)
+            type_text_output(LOSE_FUEL)
+            break
+
+        # DISPLAY HUNGER
+        if hunger > 40:
+            print("******** Your stomach rumbles. You need to eat something soon.")
+            time.sleep(1)
+        elif hunger > 25:
+            print("******** Your hunger is small but manageable.")
+            time.sleep(1)
 
         # Present the user their choices
         print(CHOICES)
@@ -135,10 +230,9 @@ def main():
                 print()
                 print("-------- You have none left.")
                 print()
-
         elif user_choice == "b":
             # Moderate speed
-            players_distance_now = random.randrange(7, 15)
+            players_distance_now = random.randrange(4, 12)
             agents_distance_now = random.randrange(7, 15)
 
             # Burn fuel\
@@ -154,7 +248,6 @@ def main():
             print()
             print(f" You traveled {players_distance_now} kms")
             print()
-
         elif user_choice == "c":
             # FAST
             players_distance_now = random.randrange(10, 16)
@@ -179,7 +272,7 @@ def main():
             # Fill up the fuel tank
             fuel = MAX_FUEL_LEVEL
 
-            # consider the agents coming closer
+            # Consider the agents coming closer
             agents_distance += random.randrange(7, 15)
 
             # Give player feed back
@@ -187,7 +280,6 @@ def main():
             print("---------- You filled the fuel tank.")
             print("---------- The agents got closer...")
             print()
-
         elif user_choice == "e":
             print(f"\t---Status Check---")
             print(f"\tkm travelled:{kms_travelled}")
@@ -197,17 +289,21 @@ def main():
             print(f"\t---------\n")
         elif user_choice == "q":
             done = True
+        else:
+            print("\tPlease choose a valid choice.")
 
-
-        # HUNGER
+        # UPKEEP
         if user_choice not in ["a", "e"]:
-            hunger += random.randrange(5, 13)
+            hunger += random.randrange(8, 18)
+            turns += 1
 
         time.sleep(1.5)
 
 
     # Outro
+    print()
     print("Thanks for playing. Play again soon!")
+    print(f"You finished the game in {turns} turns.")
 
 
 if __name__ == "__main__":
